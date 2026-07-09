@@ -1,0 +1,390 @@
+@import "tailwindcss";
+
+:root {
+  --background: #070b10;
+  --foreground: #e8edf4;
+  --surface: #0f1419;
+  --surface-elevated: #161d27;
+  --border: #243044;
+  --muted: #8b9cb3;
+  --accent: #00b4d8;
+  --accent-hover: #0096b8;
+  --accent-glow: rgba(0, 180, 216, 0.25);
+  --warning: #f59e0b;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+::selection {
+  background: var(--accent-glow);
+  color: var(--foreground);
+}
+
+.grid-pattern {
+  background-image:
+    linear-gradient(rgba(36, 48, 68, 0.35) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(36, 48, 68, 0.35) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.glow-accent {
+  box-shadow: 0 0 40px var(--accent-glow);
+}
+
+/* Carbon fiber weave utilities */
+.carbon-weave {
+  --carbon-base: #0a0d12;
+  --carbon-thread-light: rgba(255, 255, 255, 0.05);
+  --carbon-thread-dark: rgba(0, 0, 0, 0.4);
+  background-color: var(--carbon-base);
+  background-image:
+    linear-gradient(
+      160deg,
+      rgba(255, 255, 255, 0.04) 0%,
+      transparent 40%,
+      rgba(0, 0, 0, 0.2) 100%
+    ),
+    repeating-linear-gradient(
+      45deg,
+      var(--carbon-thread-dark) 0,
+      var(--carbon-thread-dark) 1px,
+      transparent 1px,
+      transparent 3px,
+      var(--carbon-thread-light) 3px,
+      var(--carbon-thread-light) 4px,
+      transparent 4px,
+      transparent 7px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      var(--carbon-thread-dark) 0,
+      var(--carbon-thread-dark) 1px,
+      transparent 1px,
+      transparent 3px,
+      var(--carbon-thread-light) 3px,
+      var(--carbon-thread-light) 4px,
+      transparent 4px,
+      transparent 7px
+    );
+  background-size: 100% 100%, 7px 7px, 7px 7px;
+}
+
+.carbon-panel {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 8px 32px rgba(0, 0, 0, 0.35);
+}
+
+.carbon-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.07) 0%,
+      transparent 45%,
+      transparent 55%,
+      rgba(0, 0, 0, 0.18) 100%
+    );
+  pointer-events: none;
+}
+
+.carbon-panel > * {
+  position: relative;
+  z-index: 1;
+}
+
+.carbon-frame {
+  position: relative;
+  padding: 3px;
+  border-radius: 1rem;
+  background:
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.06) 0,
+      rgba(255, 255, 255, 0.06) 1px,
+      rgba(0, 0, 0, 0.5) 1px,
+      rgba(0, 0, 0, 0.5) 3px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(255, 255, 255, 0.04) 0,
+      rgba(255, 255, 255, 0.04) 1px,
+      rgba(0, 0, 0, 0.45) 1px,
+      rgba(0, 0, 0, 0.45) 3px
+    );
+  background-size: 6px 6px;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 12px 40px rgba(0, 0, 0, 0.45);
+}
+
+.carbon-frame-inner {
+  overflow: hidden;
+  border-radius: calc(1rem - 3px);
+  border: 1px solid rgba(0, 0, 0, 0.6);
+}
+
+.carbon-accent-bar {
+  height: 2px;
+  background:
+    linear-gradient(90deg, transparent, var(--accent), transparent),
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.08) 0,
+      rgba(255, 255, 255, 0.08) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+  background-size: 100% 100%, 4px 4px;
+  opacity: 0.9;
+}
+
+.carbon-btn {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background-color: #0c1016;
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      rgba(0, 0, 0, 0.35) 0,
+      rgba(0, 0, 0, 0.35) 1px,
+      transparent 1px,
+      transparent 4px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(255, 255, 255, 0.04) 0,
+      rgba(255, 255, 255, 0.04) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+  background-size: 5px 5px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.carbon-btn:hover {
+  border-color: rgba(0, 180, 216, 0.45);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 0 20px rgba(0, 180, 216, 0.12);
+}
+
+/* Hero headlight scroll effect */
+.how-it-works-road {
+  background:
+    linear-gradient(180deg, transparent 0%, rgba(0, 180, 216, 0.03) 50%, transparent 100%),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 40px,
+      rgba(255, 255, 255, 0.02) 40px,
+      rgba(255, 255, 255, 0.02) 41px
+    );
+}
+
+.headlight-layer {
+  pointer-events: none;
+}
+
+.headlight-core {
+  background: radial-gradient(
+    ellipse at center,
+    #ffffff 0%,
+    #f0f8ff 25%,
+    #cce8ff 45%,
+    rgba(180, 220, 255, 0.6) 65%,
+    transparent 100%
+  );
+  border-radius: 50%;
+  box-shadow:
+    0 0 16px 6px rgba(255, 255, 255, 1),
+    0 0 48px 16px rgba(200, 230, 255, 0.85),
+    0 0 100px 32px rgba(150, 200, 255, 0.5),
+    0 0 160px 48px rgba(100, 170, 255, 0.25);
+}
+
+.headlight-core-ellipse {
+  right: 19.5%;
+  top: 52%;
+  border-radius: 40% / 50%;
+}
+
+.headlight-halo {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(220, 240, 255, 0.55) 30%,
+    rgba(180, 210, 255, 0.3) 50%,
+    transparent 75%
+  );
+  border-radius: 50%;
+  filter: blur(12px);
+}
+
+.headlight-halo-ellipse {
+  right: 18%;
+  top: 50.5%;
+  border-radius: 45% / 50%;
+}
+
+.headlight-beam {
+  background: linear-gradient(
+    to left,
+    rgba(255, 255, 255, 0.55) 0%,
+    rgba(230, 245, 255, 0.35) 15%,
+    rgba(200, 225, 255, 0.2) 35%,
+    rgba(150, 200, 255, 0.08) 55%,
+    transparent 100%
+  );
+  filter: blur(32px);
+}
+
+.headlight-beam-primary {
+  right: 7%;
+  top: 44%;
+  transform: rotate(-5deg);
+}
+
+.headlight-beam-secondary {
+  right: 9%;
+  top: 50%;
+  transform: rotate(-10deg);
+}
+
+.headlight-beam-tertiary {
+  right: 11%;
+  top: 54%;
+  transform: rotate(-16deg);
+  background: linear-gradient(
+    to left,
+    rgba(255, 255, 255, 0.35) 0%,
+    rgba(200, 225, 255, 0.15) 40%,
+    transparent 100%
+  );
+  filter: blur(24px);
+}
+
+.headlight-ambient {
+  background: linear-gradient(
+    to left,
+    rgba(200, 230, 255, 0.45) 0%,
+    rgba(150, 200, 255, 0.22) 30%,
+    rgba(100, 160, 220, 0.1) 55%,
+    transparent 100%
+  );
+}
+
+.adas-scan-pos {
+  right: 17%;
+  top: 50%;
+}
+
+.adas-scan {
+  width: min(52vw, 480px);
+  height: 3px;
+  background: linear-gradient(
+    to left,
+    rgba(120, 220, 255, 1),
+    rgba(0, 200, 240, 0.7) 35%,
+    rgba(0, 180, 216, 0.3) 60%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 20px rgba(0, 220, 255, 0.9),
+    0 0 40px rgba(0, 180, 216, 0.5);
+  transform-origin: right center;
+  animation: adas-scan-sweep 2.8s ease-in-out infinite;
+}
+
+@keyframes adas-scan-sweep {
+  0%,
+  100% {
+    transform: rotate(-6deg) scaleX(0.55);
+    opacity: 0.55;
+  }
+  50% {
+    transform: rotate(-14deg) scaleX(1);
+    opacity: 1;
+  }
+}
+
+@keyframes headlight-flicker-pulse {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  40% {
+    filter: brightness(1.18);
+  }
+  70% {
+    filter: brightness(0.92);
+  }
+}
+
+.headlight-flicker {
+  animation: headlight-flicker-pulse 3.5s ease-in-out infinite;
+}
+
+@keyframes scroll-cue-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(4px);
+  }
+}
+
+.headlight-scroll-cue {
+  animation: scroll-cue-bounce 1.6s ease-in-out infinite;
+}
+
+@media (max-width: 768px) {
+  .headlight-halo-ellipse {
+    right: 13%;
+    top: 47%;
+  }
+
+  .headlight-core-ellipse {
+    right: 14.5%;
+    top: 48.5%;
+  }
+
+  .headlight-beam-primary {
+    top: 42%;
+  }
+
+  .headlight-beam-secondary {
+    top: 48%;
+  }
+
+  .headlight-beam-tertiary {
+    top: 52%;
+  }
+}
