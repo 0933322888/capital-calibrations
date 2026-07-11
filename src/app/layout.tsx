@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { FloatingCallButton } from "@/components/FloatingCallButton";
 import { LocalBusinessJsonLd } from "@/components/JsonLd";
 import { createMetadata } from "@/lib/metadata";
 import { siteConfig } from "@/lib/site";
@@ -52,6 +53,7 @@ export default function RootLayout({
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
+        <FloatingCallButton />
       </body>
     </html>
   );
