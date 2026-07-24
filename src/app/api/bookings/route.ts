@@ -1,13 +1,6 @@
 import { NextResponse } from "next/server";
 import { isValidBookingSlot } from "@/lib/booking";
-import {
-  ensureBookingsSchema,
-  getMysqlDebugInfo,
-  getPool,
-  logMysqlDebug,
-  serializeError,
-  type ResultSetHeader,
-} from "@/lib/db";
+import { ensureBookingsSchema, getPool, type ResultSetHeader } from "@/lib/db";
 import { sendBookingEmails } from "@/lib/email";
 
 type BookingPayload = {
@@ -23,7 +16,6 @@ function isValidEmail(email: string): boolean {
 }
 
 export async function POST(request: Request) {
-  const requestId = `book-${Date.now().toString(36)}`;
   let body: BookingPayload;
 
   try {
@@ -37,15 +29,6 @@ export async function POST(request: Request) {
   const phone = body.phone?.trim() || "";
   const bookingDate = body.bookingDate?.trim() || "";
   const slotHour = Number(body.slotHour);
-
-  console.info(`[Booking create] ${requestId} start`, {
-    bookingDate,
-    slotHour,
-    hasName: Boolean(fullName),
-    hasEmail: Boolean(email),
-    hasPhone: Boolean(phone),
-    mysql: getMysqlDebugInfo(),
-  });
 
   if (!fullName || !email || !bookingDate || !Number.isInteger(slotHour)) {
     return NextResponse.json(
@@ -67,15 +50,8 @@ export async function POST(request: Request) {
   }
 
   if (!isValidBookingSlot(bookingDate, slotHour)) {
-    console.warn(`[Booking create] ${requestId} invalid slot`, {
-      bookingDate,
-      slotHour,
-    });
     return NextResponse.json(
-      {
-        error: "That date or time slot is not available.",
-        debug: { requestId, bookingDate, slotHour },
-      },
+      { error: "That date or time slot is not available." },
       { status: 400 }
     );
   }
@@ -83,16 +59,8 @@ export async function POST(request: Request) {
   let bookingId: number | null = null;
 
   try {
-    logMysqlDebug(`${requestId} before ensureBookingsSchema`);
     await ensureBookingsSchema();
-    logMysqlDebug(`${requestId} after ensureBookingsSchema`);
-
     const db = getPool();
-
-    console.info(`[Booking create] ${requestId} inserting`, {
-      bookingDate,
-      slotHour,
-    });
 
     const [result] = await db.execute<ResultSetHeader>(
       `INSERT INTO bookings (full_name, email, phone, booking_date, slot_hour, status)
@@ -101,48 +69,26 @@ export async function POST(request: Request) {
     );
 
     bookingId = result.insertId;
-    console.info(`[Booking create] ${requestId} insert ok`, { bookingId });
   } catch (error) {
-    const serialized = serializeError(error);
-    console.error(`[Booking create] ${requestId} insert failed`, {
-      error: serialized,
-      mysql: getMysqlDebugInfo(),
-    });
-
-    if (serialized.code === "ER_DUP_ENTRY") {
+    const mysqlError = error as { code?: string };
+    if (mysqlError.code === "ER_DUP_ENTRY") {
       return NextResponse.json(
-        {
-          error: "That time slot was just booked. Please choose another.",
-          debug: { requestId, error: serialized },
-        },
+        { error: "That time slot was just booked. Please choose another." },
         { status: 409 }
       );
     }
 
+    console.error("[Booking create]", error);
     return NextResponse.json(
-      {
-        error: "Unable to save your booking. Please try again shortly.",
-        code: serialized.code,
-        debug: {
-          requestId,
-          stage: "insert",
-          mysql: getMysqlDebugInfo(),
-          error: serialized,
-          bookingDate,
-          slotHour,
-        },
-      },
+      { error: "Unable to save your booking. Please try again shortly." },
       { status: 500 }
     );
   }
 
-  // Email must not fail the booking once it is persisted.
   let emailSent = false;
   let emailNote: string | undefined;
-  let emailDebug: Record<string, unknown> | undefined;
 
   try {
-    console.info(`[Booking create] ${requestId} sending emails`);
     const emailResult = await sendBookingEmails({
       fullName,
       email,
@@ -152,22 +98,9 @@ export async function POST(request: Request) {
     });
     emailSent = emailResult.sent;
     emailNote = emailResult.reason;
-    emailDebug = {
-      sent: emailResult.sent,
-      reason: emailResult.reason,
-      customerMessageId: emailResult.customerMessageId,
-      ownerMessageId: emailResult.ownerMessageId,
-      smtp: emailResult.smtp,
-    };
-    console.info(`[Booking create] ${requestId} email result`, emailDebug);
   } catch (error) {
-    const serialized = serializeError(error);
-    console.error(`[Booking create] ${requestId} email failed`, {
-      error: serialized,
-      bookingId,
-    });
-    emailNote = `Booking saved, but email failed: ${serialized.message}`;
-    emailDebug = { sent: false, error: serialized };
+    console.error("[Booking email]", error);
+    emailNote = "Booking saved, but confirmation email could not be sent.";
   }
 
   return NextResponse.json({
@@ -175,6 +108,5 @@ export async function POST(request: Request) {
     bookingId,
     emailSent,
     emailNote,
-    debug: { requestId, email: emailDebug },
   });
 }

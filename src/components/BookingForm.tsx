@@ -22,8 +22,6 @@ type AvailabilityResponse = {
   month: number;
   days: DayAvailability[];
   error?: string;
-  code?: string;
-  debug?: unknown;
 };
 
 type FormState = "idle" | "submitting" | "success" | "error";
@@ -59,8 +57,6 @@ export function BookingForm() {
     date: string;
     hour: number;
     emailSent?: boolean;
-    emailNote?: string;
-    emailDebug?: unknown;
   } | null>(null);
 
   const dayMap = useMemo(() => {
@@ -86,12 +82,7 @@ export function BookingForm() {
       );
       const data = (await response.json()) as AvailabilityResponse;
       if (!response.ok) {
-        const parts = [data.error || "Unable to load calendar."];
-        if (data.code) parts.push(`Code: ${data.code}`);
-        if (data.debug) {
-          parts.push(`Debug: ${JSON.stringify(data.debug, null, 2)}`);
-        }
-        throw new Error(parts.join("\n"));
+        throw new Error(data.error || "Unable to load calendar.");
       }
       setDays(data.days);
     } catch (error) {
@@ -169,32 +160,16 @@ export function BookingForm() {
 
       const data = (await response.json()) as {
         error?: string;
-        code?: string;
-        debug?: unknown;
         emailSent?: boolean;
-        emailNote?: string;
       };
       if (!response.ok) {
-        const parts = [data.error || "Something went wrong."];
-        if (data.code) parts.push(`Code: ${data.code}`);
-        if (data.debug) {
-          parts.push(`Debug: ${JSON.stringify(data.debug, null, 2)}`);
-        }
-        throw new Error(parts.join("\n"));
+        throw new Error(data.error || "Something went wrong.");
       }
-
-      console.info("[BookingForm] booking saved", {
-        emailSent: data.emailSent,
-        emailNote: data.emailNote,
-        debug: data.debug,
-      });
 
       setSuccessDetails({
         date: selectedDate,
         hour: selectedHour,
         emailSent: data.emailSent,
-        emailNote: data.emailNote,
-        emailDebug: data.debug,
       });
       setState("success");
       setFullName("");
@@ -234,15 +209,9 @@ export function BookingForm() {
             .{" "}
             {successDetails.emailSent
               ? "A confirmation email has been sent to your inbox."
-              : successDetails.emailNote ||
-                "A confirmation email will be sent once email delivery is configured."}{" "}
-            We&apos;ll follow up shortly to finalize.
+              : "We will follow up by email shortly."}{" "}
+            We&apos;ll finalize the appointment soon.
           </p>
-          {successDetails.emailDebug != null && (
-            <pre className="mt-4 overflow-x-auto whitespace-pre-wrap rounded-lg border border-border bg-background/50 px-3 py-2 text-xs text-muted">
-              Email debug: {JSON.stringify(successDetails.emailDebug, null, 2)}
-            </pre>
-          )}
           <button
             type="button"
             onClick={() => {
@@ -352,9 +321,7 @@ export function BookingForm() {
           <p className="mt-3 text-xs text-muted">Loading availability…</p>
         )}
         {calendarError && (
-          <pre className="mt-3 overflow-x-auto whitespace-pre-wrap rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-400">
-            {calendarError}
-          </pre>
+          <p className="mt-3 text-xs text-red-400">{calendarError}</p>
         )}
       </div>
 
@@ -443,9 +410,9 @@ export function BookingForm() {
       )}
 
       {state === "error" && (
-        <pre className="mt-4 overflow-x-auto whitespace-pre-wrap rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-xs text-red-400">
+        <p className="mt-4 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">
           {errorMessage}
-        </pre>
+        </p>
       )}
 
       <button
