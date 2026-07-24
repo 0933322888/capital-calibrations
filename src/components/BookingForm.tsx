@@ -105,6 +105,11 @@ export function BookingForm() {
     void loadAvailability(viewYear, viewMonth);
   }, [viewYear, viewMonth, loadAvailability]);
 
+  useEffect(() => {
+    if (state !== "success") return;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [state]);
+
   function shiftMonth(delta: number) {
     let nextMonth = viewMonth + delta;
     let nextYear = viewYear;
