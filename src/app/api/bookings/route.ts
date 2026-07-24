@@ -139,6 +139,7 @@ export async function POST(request: Request) {
   // Email must not fail the booking once it is persisted.
   let emailSent = false;
   let emailNote: string | undefined;
+  let emailDebug: Record<string, unknown> | undefined;
 
   try {
     console.info(`[Booking create] ${requestId} sending emails`);
@@ -151,7 +152,14 @@ export async function POST(request: Request) {
     });
     emailSent = emailResult.sent;
     emailNote = emailResult.reason;
-    console.info(`[Booking create] ${requestId} email result`, emailResult);
+    emailDebug = {
+      sent: emailResult.sent,
+      reason: emailResult.reason,
+      customerMessageId: emailResult.customerMessageId,
+      ownerMessageId: emailResult.ownerMessageId,
+      smtp: emailResult.smtp,
+    };
+    console.info(`[Booking create] ${requestId} email result`, emailDebug);
   } catch (error) {
     const serialized = serializeError(error);
     console.error(`[Booking create] ${requestId} email failed`, {
@@ -159,6 +167,7 @@ export async function POST(request: Request) {
       bookingId,
     });
     emailNote = `Booking saved, but email failed: ${serialized.message}`;
+    emailDebug = { sent: false, error: serialized };
   }
 
   return NextResponse.json({
@@ -166,6 +175,6 @@ export async function POST(request: Request) {
     bookingId,
     emailSent,
     emailNote,
-    debug: { requestId },
+    debug: { requestId, email: emailDebug },
   });
 }

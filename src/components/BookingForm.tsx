@@ -58,6 +58,9 @@ export function BookingForm() {
   const [successDetails, setSuccessDetails] = useState<{
     date: string;
     hour: number;
+    emailSent?: boolean;
+    emailNote?: string;
+    emailDebug?: unknown;
   } | null>(null);
 
   const dayMap = useMemo(() => {
@@ -168,6 +171,7 @@ export function BookingForm() {
         error?: string;
         code?: string;
         debug?: unknown;
+        emailSent?: boolean;
         emailNote?: string;
       };
       if (!response.ok) {
@@ -179,7 +183,19 @@ export function BookingForm() {
         throw new Error(parts.join("\n"));
       }
 
-      setSuccessDetails({ date: selectedDate, hour: selectedHour });
+      console.info("[BookingForm] booking saved", {
+        emailSent: data.emailSent,
+        emailNote: data.emailNote,
+        debug: data.debug,
+      });
+
+      setSuccessDetails({
+        date: selectedDate,
+        hour: selectedHour,
+        emailSent: data.emailSent,
+        emailNote: data.emailNote,
+        emailDebug: data.debug,
+      });
       setState("success");
       setFullName("");
       setEmail("");
@@ -215,9 +231,18 @@ export function BookingForm() {
               {formatDateLabel(successDetails.date)} at{" "}
               {formatSlotLabel(successDetails.hour)}
             </span>
-            . A confirmation email will be sent to your inbox. We&apos;ll
-            follow up shortly to finalize.
+            .{" "}
+            {successDetails.emailSent
+              ? "A confirmation email has been sent to your inbox."
+              : successDetails.emailNote ||
+                "A confirmation email will be sent once email delivery is configured."}{" "}
+            We&apos;ll follow up shortly to finalize.
           </p>
+          {successDetails.emailDebug != null && (
+            <pre className="mt-4 overflow-x-auto whitespace-pre-wrap rounded-lg border border-border bg-background/50 px-3 py-2 text-xs text-muted">
+              Email debug: {JSON.stringify(successDetails.emailDebug, null, 2)}
+            </pre>
+          )}
           <button
             type="button"
             onClick={() => {
