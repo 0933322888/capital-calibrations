@@ -13,7 +13,7 @@ export const siteConfig = {
   },
   hours: {
     label: "Monday – Saturday",
-    time: "7:00 AM – 6:00 PM",
+    time: "8:00 AM – 6:00 PM",
   },
   serviceArea: [
     "Ottawa",

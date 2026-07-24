@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ContactForm } from "@/components/ContactForm";
+import { BookingForm } from "@/components/BookingForm";
 import { SectionHeading } from "@/components/SectionHeading";
 import { ContactInfo, ServiceArea } from "@/components/TrustSections";
 import { createMetadata } from "@/lib/metadata";
@@ -7,7 +7,7 @@ import { createMetadata } from "@/lib/metadata";
 export const metadata: Metadata = createMetadata({
   title: "Contact & Book Appointment",
   description:
-    "Contact Capital Calibrations for mobile ADAS calibration in Ottawa. Call (613) 700-0191 or submit a booking request online.",
+    "Contact Capital Calibrations for mobile ADAS calibration in Ottawa. Call (613) 700-0191 or book an available time online.",
   path: "/contact",
   keywords: [
     "book ADAS calibration Ottawa",
@@ -22,12 +22,12 @@ export default function ContactPage() {
       <SectionHeading
         eyebrow="Contact"
         title="Book a calibration or ask a question"
-        description="Prefer to talk now? Call or email during business hours. Or submit the form below and we'll get back to you promptly."
+        description="Pick an available day and time below, or call or email during business hours if you prefer to talk now."
       />
 
       <div className="mt-12 grid gap-10 lg:grid-cols-5">
         <div className="lg:col-span-3">
-          <ContactForm />
+          <BookingForm />
         </div>
         <div className="lg:col-span-2">
           <ContactInfo />
