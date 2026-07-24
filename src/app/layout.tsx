@@ -1,3 +1,4 @@
+import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { Header } from "@/components/Header";
@@ -40,13 +41,6 @@ export const metadata: Metadata = {
     shortcut: ["/favicon-32x32.png"],
   },
   manifest: "/site.webmanifest",
-  openGraph: {
-    ...createMetadata({
-      title: `${siteConfig.name} | ${siteConfig.tagline}`,
-      description: siteConfig.description,
-    }).openGraph,
-    images: [{ url: "/images/about-1.png", alt: "Mobile ADAS calibration setup" }],
-  },
 };
 
 export default function RootLayout({
@@ -57,6 +51,7 @@ export default function RootLayout({
   return (
     <html lang="en-CA" className={`${inter.variable} ${jetbrains.variable} h-full`}>
       <body className="min-h-full flex flex-col antialiased">
+        <GoogleAnalytics />
         <LocalBusinessJsonLd />
         <Header />
         <main className="flex-1">{children}</main>

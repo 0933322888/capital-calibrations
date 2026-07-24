@@ -65,7 +65,7 @@ export function HomeHero() {
     >
       <Image
         src={siteImages.heroBackground}
-        alt=""
+        alt="Mobile ADAS calibration van and equipment ready for on-site shop service"
         fill
         priority
         className="object-cover object-right"

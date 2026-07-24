@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CTA } from "@/components/CTA";
+import { BreadcrumbJsonLd, ServiceJsonLd } from "@/components/JsonLd";
 import { createMetadata } from "@/lib/metadata";
 import { getServiceBySlug, services } from "@/lib/site";
 
@@ -35,6 +36,15 @@ export default async function ServiceDetailPage({ params }: Props) {
 
   return (
     <article className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+      <ServiceJsonLd service={service} />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", path: "/" },
+          { name: "Services", path: "/services" },
+          { name: service.title, path: `/services/${service.slug}` },
+        ]}
+      />
+
       <nav className="text-sm text-muted" aria-label="Breadcrumb">
         <Link href="/services" className="hover:text-accent">
           Services

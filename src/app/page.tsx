@@ -1,6 +1,7 @@
 import { CalibrationTriggers } from "@/components/CalibrationTriggers";
 import { CTA } from "@/components/CTA";
 import { EquipmentStrip } from "@/components/EquipmentStrip";
+import { FaqSection } from "@/components/FaqSection";
 import { HomeHero } from "@/components/HomeHero";
 import { HowItWorksSection } from "@/components/HowItWorksSection";
 import { SectionHeading } from "@/components/SectionHeading";
@@ -64,6 +65,8 @@ export default function HomePage() {
       <section className="mx-auto max-w-6xl px-4 pb-20 sm:px-6">
         <ServiceArea />
       </section>
+
+      <FaqSection />
 
       <section className="mx-auto max-w-6xl px-4 pb-24 sm:px-6">
         <CTA />

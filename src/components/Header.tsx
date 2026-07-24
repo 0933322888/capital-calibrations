@@ -20,12 +20,6 @@ export function Header() {
         </nav>
         <div className="flex items-center gap-3">
           <Link
-            href="/contact"
-            className="carbon-btn hidden rounded-lg px-4 py-2 text-sm text-muted transition-colors hover:text-foreground sm:inline-block"
-          >
-            Contact
-          </Link>
-          <Link
             href="/contact#book"
             className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-background transition-colors hover:bg-accent-hover"
           >

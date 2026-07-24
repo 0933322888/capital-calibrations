@@ -166,7 +166,7 @@ export function HowItWorksSection({ steps }: HowItWorksSectionProps) {
           <div className="how-it-works-road absolute inset-0" aria-hidden="true">
             <Image
               src={siteImages.carMotion}
-              alt=""
+              alt="Vehicle in motion representing on-site mobile ADAS calibration workflow"
               fill
               className="object-cover object-left opacity-[0.12]"
               sizes="(max-width: 768px) 100vw, 1152px"
