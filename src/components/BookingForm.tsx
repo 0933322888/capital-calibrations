@@ -22,6 +22,8 @@ type AvailabilityResponse = {
   month: number;
   days: DayAvailability[];
   error?: string;
+  code?: string;
+  debug?: unknown;
 };
 
 type FormState = "idle" | "submitting" | "success" | "error";
@@ -81,7 +83,12 @@ export function BookingForm() {
       );
       const data = (await response.json()) as AvailabilityResponse;
       if (!response.ok) {
-        throw new Error(data.error || "Unable to load calendar.");
+        const parts = [data.error || "Unable to load calendar."];
+        if (data.code) parts.push(`Code: ${data.code}`);
+        if (data.debug) {
+          parts.push(`Debug: ${JSON.stringify(data.debug, null, 2)}`);
+        }
+        throw new Error(parts.join("\n"));
       }
       setDays(data.days);
     } catch (error) {
@@ -305,7 +312,9 @@ export function BookingForm() {
           <p className="mt-3 text-xs text-muted">Loading availability…</p>
         )}
         {calendarError && (
-          <p className="mt-3 text-xs text-red-400">{calendarError}</p>
+          <pre className="mt-3 overflow-x-auto whitespace-pre-wrap rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-400">
+            {calendarError}
+          </pre>
         )}
       </div>
 
