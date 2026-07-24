@@ -166,6 +166,7 @@ export const services: Service[] = [
 ];
 
 export const navLinks = [
+  { href: "/", label: "Home" },
   { href: "/services", label: "Services" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },

@@ -151,7 +151,8 @@ export function HowItWorksSection({ steps }: HowItWorksSectionProps) {
   return (
     <section
       ref={sectionRef}
-      className="relative"
+      id="how-it-works"
+      className="relative mt-20 sm:mt-24"
       style={{ height: `${100 + steps.length * 40}vh` }}
       aria-label="How it works"
     >
