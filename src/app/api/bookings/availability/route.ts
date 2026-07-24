@@ -171,10 +171,10 @@ export async function GET(request: Request) {
         "Booking database is not configured on the server. Add MYSQL_HOST, MYSQL_DATABASE, MYSQL_USER, and MYSQL_PASSWORD in Hostinger environment variables, then restart the app.";
     } else if (code === "ECONNREFUSED" || code === "ENOTFOUND" || code === "ETIMEDOUT") {
       message =
-        "Cannot connect to MySQL. On Hostinger, MYSQL_HOST should usually be localhost. Confirm the database exists and the Node app was restarted after setting env vars.";
+        "Cannot connect to MySQL. On Hostinger, set MYSQL_HOST=127.0.0.1 (not localhost), confirm the database exists, and restart the Node app.";
     } else if (code === "ER_ACCESS_DENIED_ERROR") {
       message =
-        "MySQL login failed. Check MYSQL_USER and MYSQL_PASSWORD in Hostinger environment variables.";
+        "MySQL login failed. Set MYSQL_HOST=127.0.0.1 (avoids IPv6 ::1), and verify MYSQL_USER / MYSQL_PASSWORD in Hostinger env vars, then restart the app.";
     } else if (code === "ER_BAD_DB_ERROR") {
       message =
         "MySQL database not found. Check MYSQL_DATABASE in Hostinger environment variables.";

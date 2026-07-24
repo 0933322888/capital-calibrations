@@ -21,7 +21,7 @@ function maskSecret(value: string | undefined): string {
 
 /** Safe snapshot for logs / API debug — never includes raw password. */
 export function getMysqlDebugInfo() {
-  const host = process.env.MYSQL_HOST?.trim() || "(default: localhost)";
+    const host = process.env.MYSQL_HOST?.trim() || "(default: 127.0.0.1)";
   const port = process.env.MYSQL_PORT?.trim() || "(default: 3306)";
   const database = process.env.MYSQL_DATABASE?.trim() || "(missing)";
   const user = process.env.MYSQL_USER?.trim() || "(missing)";
@@ -73,8 +73,10 @@ export function serializeError(error: unknown) {
 export function getPool(): Pool {
   if (!pool) {
     logMysqlDebug("Creating connection pool");
+    // Prefer 127.0.0.1 over "localhost" — Node often resolves localhost to ::1 (IPv6),
+    // and Hostinger MySQL users are typically granted for 127.0.0.1 / localhost only.
     pool = mysql.createPool({
-      host: process.env.MYSQL_HOST || "localhost",
+      host: process.env.MYSQL_HOST || "127.0.0.1",
       port: Number(process.env.MYSQL_PORT || 3306),
       database: requireEnv("MYSQL_DATABASE"),
       user: requireEnv("MYSQL_USER"),

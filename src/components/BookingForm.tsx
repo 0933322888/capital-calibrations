@@ -159,9 +159,19 @@ export function BookingForm() {
         }),
       });
 
-      const data = (await response.json()) as { error?: string };
+      const data = (await response.json()) as {
+        error?: string;
+        code?: string;
+        debug?: unknown;
+        emailNote?: string;
+      };
       if (!response.ok) {
-        throw new Error(data.error || "Something went wrong.");
+        const parts = [data.error || "Something went wrong."];
+        if (data.code) parts.push(`Code: ${data.code}`);
+        if (data.debug) {
+          parts.push(`Debug: ${JSON.stringify(data.debug, null, 2)}`);
+        }
+        throw new Error(parts.join("\n"));
       }
 
       setSuccessDetails({ date: selectedDate, hour: selectedHour });
@@ -403,9 +413,9 @@ export function BookingForm() {
       )}
 
       {state === "error" && (
-        <p className="mt-4 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">
+        <pre className="mt-4 overflow-x-auto whitespace-pre-wrap rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-xs text-red-400">
           {errorMessage}
-        </p>
+        </pre>
       )}
 
       <button
